@@ -1,117 +1,80 @@
 import React from "react";
-// import UserServices  from "../../service/userService/UserServices";
-import { useState } from 'react';
-import { Link } from "react-router-dom";
-import axios from "axios";
-const base_url="http://localhost:9090/login";
+import { useState,useRef,useEffect } from 'react';
+import { Link, useHistory } from "react-router-dom";
+import axios from "../../api/axios";
+import { useContext } from "react";
+import AuthContext from "../../context/AuthProvider";
 
 const Login=()=>{
-    
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    
-    // States for checking the errors
-    const [submitted, setSubmitted] = useState(false);
-    const [error, setError] = useState(false);
-    
-   
-    // Handling the email change
-    const handleEmail = (e) => {
-    setEmail(e.target.value);
-    setSubmitted(false);
-    };
-    
-    // Handling the password change
-    const handlePassword = (e) => {
-    setPassword(e.target.value);
-    setSubmitted(false);
-    };
-    
-    // Handling the form submission
-    const handleSubmit = (e) => {
+
+  const {setAuth} = useContext(AuthContext);
+  const history=useHistory();  
+  
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  
+  const errorRef= useRef('');
+  const startRef= useRef('');
+
+  const [error,setError]=useState('');
+
+  useEffect(()=>{
+    startRef.current.focus();
+  },[])
+
+  useEffect(()=>{
+    setError('');
+  },[email,password])
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    if (email==='' || password === '') {
-    setError(true);
-    } else {
-        const user={email,password}
-    axios.post(base_url,user)
-    .then((response)=>{
-        console.log(response);
-        if (response==="")
-            {
-                
-                console.log("invalid username and password");
-            }
-        else
-        {console.log(response)}
-    })
-    .catch((error)=>{
-        console.log("invalid email or password");
-        setError(true);
-    })
-    setError(false);
+    try{
+      const user={email,password};
+      const response=axios.post("/login",user);
+      const data=(await response).data;
+      console.log(response);
+      console.log(data);
+      setAuth(data);
+      history.replace("/");
+    }catch(err){
+      if(!err?.response){
+        setError('No Server Response');
+      }else{
+        setError('Login Failed')
+      }
+      errorRef.current.focus();
+      
     }
-    }
-    
-    // Showing success message
-    const successMessage = () => {
+};
+
     return (
-    <div
-    className="success"
-    style={{
-    display: submitted ? '' : 'none',
-    }}>
-    <h1>User successfully registered!!</h1>
-    </div>
-    );
-    };
-    
-    // Showing error message if error is true
-    const errorMessage = () => {
-    return (
-    <div
-    className="error"
-    style={{
-    display: error ? '' : 'none',
-    }}>
-    <h1>Please enter all the fields</h1>
-    </div>
-    );
-    };
-    
-    return (
-    <div >
-    
-    <h1>User Login</h1>
-    
-    
-    {/* Calling to the methods */}
-    {/* <div className="messages">
-    {errorMessage()}
-    {successMessage()}
-    </div> */}
-    
-    <form class="needs-validation" novalidate>
-      <div class="col-md-4">
-      <label for="email" class="form-label">Email</label>
-        <input type="text" class="form-control" id="email" value={email} required onChange={handleEmail}/>
-        <div class="valid-feedback">
-          Looks good!
-        </div>
-      </div>
-      <div class="col-md-4">
-      <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" value={password} required onChange={handlePassword}/>
-        <div class="valid-feedback">
-          Looks good!
-        </div>
-      </div>
-      <div class="col-md-4">
-        <button class="btn btn-primary" type="submit" onClick={handleSubmit}>Login</button>
-      </div>
-    </form>
-    </div>
-    );
+      <>
+          <div>
+            <h2 className="col-3 offset-4">LOGIN FORM</h2>
+            <form onSubmit={handleSubmit}>
+              <div className="col-3 offset-4">
+              <label htmlFor="email" className="form-label label">Email</label>
+                <input ref={startRef} type="text" placeholder='Enter Email-ID' className="form-control" id="email" 
+                      value={email} required onChange={(e)=>setEmail(e.target.value)}/>
+              </div>
+              <div className="col-3 offset-4">
+              <label htmlFor="password" className="form-label label">Password</label>
+                <input type="password" placeholder='Enter password' className="form-control" id="password" 
+                      value={password} required onChange={(e)=>setPassword(e.target.value)}/>
+              </div>
+              <p ref={errorRef} className={error?"col-5 offset-4 error":"offscreen"}> {error} </p>
+              <div className="col-3 offset-5">
+                <button disabled={email==='' || password==='' ?true:false}
+                        className="btn btn-primary submit" type="submit">Login</button>
+              </div>
+              <div className="col-4 offset-4">
+                <p>Want to create a new account ? ...click below</p>
+                <Link to="/register">Create Account</Link>
+              </div>
+            </form>
+          </div>
+      </>
+    )
 }
 
 export default Login;

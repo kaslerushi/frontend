@@ -11,3 +11,34 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.offscreen {
+  position: absolute;
+  left: -9999px;
+}
+
+.label{
+  margin-top: 0.5rem;
+  margin-bottom:0.0rem;
+}
+.pwd {
+  color:red;
+}
+
+.submit{
+  margin-top: 0.9rem;
+}
+
+.error{
+  color: red;
+  margin-top: 0.4rem;
+}
+
+.instructions {
+  font-size: 0.75rem;
+  border-radius: 0.5rem;
+  background: #000;
+  color: #fff;
+  padding: 0.25rem;
+  position: relative;
+  bottom: -10px;
+}

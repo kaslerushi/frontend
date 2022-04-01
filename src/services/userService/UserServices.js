@@ -1,31 +1,31 @@
-import React from "react";
-import axios from "axios";
+// import React from "react";
+// import axios from "axios";
 
-const base_url="http://localhost:9090/"
+// const base_url="http://localhost:9090/"
 
-const UserServices=()=>{
-    getUsers=()=>{
-        return axios.get(base_url+"users")
-    }
+// const UserServices=()=>{
+//     getUsers=()=>{
+//         return axios.get(base_url+"users")
+//     }
     
-    addUser=(user)=>{
-        return axios.post(base_url+"register",user,{
-            headers:{
-                'Content-Type':'application/json'
-            }
-        });
-    }
+//     addUser=(user)=>{
+//         return axios.post(base_url+"register",user,{
+//             headers:{
+//                 'Content-Type':'application/json'
+//             }
+//         });
+//     }
 
-    validateUser=(user)=>{
-        return axios.post(base_url+"login",user,{
-            headers:{
-                'Content-Type':'application/json'
-            }
-        });   
-    }
-}
+//     validateUser=(user)=>{
+//         return axios.post(base_url+"login",user,{
+//             headers:{
+//                 'Content-Type':'application/json'
+//             }
+//         });   
+//     }
+// }
 
-export default UserServices;
+// export default UserServices;
 
 
 
