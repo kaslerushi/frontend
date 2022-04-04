@@ -29,12 +29,20 @@ const Login=()=>{
   const handleSubmit = async(e) => {
     e.preventDefault();
     try{
-      const user={email,password};
-      const response=axios.post("/login",user);
-      const data=(await response).data;
-      console.log(response);
-      console.log(data);
-      setAuth(data);
+       const user={email,password};
+      //const response=axios.post("/login",user);
+      
+      axios.get('http://localhost:9090/api/login',{
+            auth: {
+                username:user.email,
+                password:user.password
+              }
+        })
+        localStorage.setItem("userDetails",JSON.stringify(user));
+      // const data=(await response).data;
+      // console.log(response);
+      // console.log(data);
+      // setAuth(data);
       history.replace("/");
     }catch(err){
       if(!err?.response){
@@ -43,7 +51,6 @@ const Login=()=>{
         setError('Login Failed')
       }
       errorRef.current.focus();
-      
     }
 };
 

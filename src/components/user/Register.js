@@ -12,12 +12,8 @@
   const errorRef= useRef('');
   const startRef= useRef('');
 
-  // const roles=[
-  //   {lable:'customer',value:'CUSTOMER'},
-  //   {lable:'farmer',value:'FARMER'},
-  //   {lable:'admin',value:'ADMIN'}
-  // ]
-  const [role, setRole] = useState('CUSTOMER');
+ 
+  const [role, setRole] = useState('FARMER');
 
   const [fname, setFname] = useState('');
   const [lname, setLname] = useState('');
@@ -65,16 +61,18 @@
 
   const handleSubmit = async(e) => {
       e.preventDefault();
+      
       const result=EMAIL_REGEX.test(email) && PWD_REGEX.test(password);
       if(!result) {
         setError('invalid email or password');
         errorRef.current.focus();
       } else {
-        const user={role,fname,lname,email,password,confirmPassword}
-        console.log(user);
+        const userAccountCreate={fname,lname,email,password,role}
+        console.log(userAccountCreate);
         try{
-          const response=await axios.post("/register",user);
+          const response=await axios.post("/api/register",userAccountCreate);
           console.log(response?.data);
+          
           setSuccessful(true);
         }catch(err){
           console.log(err);
@@ -91,11 +89,6 @@
       }
   };
 
-  // const handleRole=(e)=>{
-   
-  //   console.log(e);
-  // }
-
 return (
       <>
         {successful?(
@@ -107,13 +100,6 @@ return (
             <div>
               <h2 className="col-3 offset-4">REGISTRATION FORM</h2>
               <form onSubmit={handleSubmit}>
-                {/* <div className="col-3 offset-4"> */}
-                  {/* <label htmlFor="s1" className="form-label label">Are you a ?</label> */}
-                  {/* <Select options={roles} defaultValue={roles[0]} onChange={(e)=>{setRole(e.value)}}/> */}
-                  {/* <select id="s1" defaultValue={roles[]} className="form-select" onChange={handleRole}>
-                    {roles.map((r)=>{<option id={r.lable} value={r.value}>{r.lable}</option>})} */}
-                  {/* </select>
-                </div> */}
                 <div className="col-3 offset-4">
                   <label ref={startRef} htmlFor="fname"  className="form-label label">First name</label>
                   <input type="text" placeholder='Enter first name' className="form-control" id="fname"
